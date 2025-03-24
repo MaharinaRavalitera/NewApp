@@ -1,0 +1,307 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org" 
+      xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
+      layout:decorate="~{dashboard/layout}">
+<head>
+    <title>Générateur de données factices - DayByDay CRM</title>
+</head>
+<body>
+    <div layout:fragment="content">
+        <div class="container-fluid">
+            <!-- Page Heading -->
+            <div class="d-sm-flex align-items-center justify-content-between mb-4">
+                <h1 class="h3 mb-0 text-gray-800">Générateur de données factices</h1>
+            </div>
+
+            <!-- Alerts -->
+            <div th:if="${success}" class="alert alert-success alert-dismissible fade show" role="alert">
+                <span th:text="${success}"></span>
+                <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+            </div>
+            <div th:if="${error}" class="alert alert-danger alert-dismissible fade show" role="alert">
+                <span th:text="${error}"></span>
+                <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+            </div>
+
+            <!-- Current Data Status -->
+            <div class="row mb-4">
+                <div class="col-md-12">
+                    <div class="card shadow">
+                        <div class="card-header py-3">
+                            <h6 class="m-0 font-weight-bold text-primary">Données actuelles</h6>
+                        </div>
+                        <div class="card-body">
+                            <div class="row">
+                                <div class="col-md-3 mb-3">
+                                    <div class="card stat-card primary">
+                                        <div class="card-body">
+                                            <div class="row no-gutters align-items-center">
+                                                <div class="col mr-2">
+                                                    <div class="stat-label text-uppercase mb-1">Clients</div>
+                                                    <div class="stat-value" th:text="${dataStatus != null ? dataStatus.clients : '0'}">0</div>
+                                                </div>
+                                                <div class="col-auto">
+                                                    <i class="fas fa-users fa-2x text-gray-300"></i>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="col-md-3 mb-3">
+                                    <div class="card stat-card success">
+                                        <div class="card-body">
+                                            <div class="row no-gutters align-items-center">
+                                                <div class="col mr-2">
+                                                    <div class="stat-label text-uppercase mb-1">Projets</div>
+                                                    <div class="stat-value" th:text="${dataStatus != null ? dataStatus.projects : '0'}">0</div>
+                                                </div>
+                                                <div class="col-auto">
+                                                    <i class="fas fa-project-diagram fa-2x text-gray-300"></i>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="col-md-3 mb-3">
+                                    <div class="card stat-card info">
+                                        <div class="card-body">
+                                            <div class="row no-gutters align-items-center">
+                                                <div class="col mr-2">
+                                                    <div class="stat-label text-uppercase mb-1">Tâches</div>
+                                                    <div class="stat-value" th:text="${dataStatus != null ? dataStatus.tasks : '0'}">0</div>
+                                                </div>
+                                                <div class="col-auto">
+                                                    <i class="fas fa-tasks fa-2x text-gray-300"></i>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="col-md-3 mb-3">
+                                    <div class="card stat-card warning">
+                                        <div class="card-body">
+                                            <div class="row no-gutters align-items-center">
+                                                <div class="col mr-2">
+                                                    <div class="stat-label text-uppercase mb-1">Leads</div>
+                                                    <div class="stat-value" th:text="${dataStatus != null ? dataStatus.leads : '0'}">0</div>
+                                                </div>
+                                                <div class="col-auto">
+                                                    <i class="fas fa-funnel-dollar fa-2x text-gray-300"></i>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="col-md-4 mb-3">
+                                    <div class="card stat-card danger">
+                                        <div class="card-body">
+                                            <div class="row no-gutters align-items-center">
+                                                <div class="col mr-2">
+                                                    <div class="stat-label text-uppercase mb-1">Factures</div>
+                                                    <div class="stat-value" th:text="${dataStatus != null ? dataStatus.invoices : '0'}">0</div>
+                                                </div>
+                                                <div class="col-auto">
+                                                    <i class="fas fa-file-invoice-dollar fa-2x text-gray-300"></i>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="col-md-4 mb-3">
+                                    <div class="card stat-card primary">
+                                        <div class="card-body">
+                                            <div class="row no-gutters align-items-center">
+                                                <div class="col mr-2">
+                                                    <div class="stat-label text-uppercase mb-1">Commentaires</div>
+                                                    <div class="stat-value" th:text="${dataStatus != null ? dataStatus.comments : '0'}">0</div>
+                                                </div>
+                                                <div class="col-auto">
+                                                    <i class="fas fa-comments fa-2x text-gray-300"></i>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="col-md-4 mb-3">
+                                    <div class="card stat-card success">
+                                        <div class="card-body">
+                                            <div class="row no-gutters align-items-center">
+                                                <div class="col mr-2">
+                                                    <div class="stat-label text-uppercase mb-1">Documents</div>
+                                                    <div class="stat-value" th:text="${dataStatus != null ? dataStatus.documents : '0'}">0</div>
+                                                </div>
+                                                <div class="col-auto">
+                                                    <i class="fas fa-file-alt fa-2x text-gray-300"></i>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Generation Results -->
+            <div class="row mb-4" th:if="${generationResult != null}">
+                <div class="col-md-12">
+                    <div class="card shadow">
+                        <div class="card-header py-3">
+                            <h6 class="m-0 font-weight-bold text-primary">Résultats de la génération</h6>
+                        </div>
+                        <div class="card-body">
+                            <div class="table-responsive">
+                                <table class="table table-bordered">
+                                    <thead>
+                                        <tr>
+                                            <th>Type de données</th>
+                                            <th>Demandé</th>
+                                            <th>Généré</th>
+                                            <th>Statut</th>
+                                        </tr>
+                                    </thead>
+                                    <tbody>
+                                        <tr th:if="${generationResult != null && generationResult.containsKey('clients')}">
+                                            <td>Clients</td>
+                                            <td th:text="${generationResult.get('requested_clients')}">0</td>
+                                            <td th:text="${generationResult.get('clients')}">0</td>
+                                            <td><span class="badge bg-success">Succès</span></td>
+                                        </tr>
+                                        <tr th:if="${generationResult != null && generationResult.containsKey('projects')}">
+                                            <td>Projets</td>
+                                            <td th:text="${generationResult.get('requested_projects')}">0</td>
+                                            <td th:text="${generationResult.get('projects')}">0</td>
+                                            <td><span class="badge bg-success">Succès</span></td>
+                                        </tr>
+                                        <tr th:if="${generationResult != null && generationResult.containsKey('tasks')}">
+                                            <td>Tâches</td>
+                                            <td th:text="${generationResult.get('requested_tasks')}">0</td>
+                                            <td th:text="${generationResult.get('tasks')}">0</td>
+                                            <td><span class="badge bg-success">Succès</span></td>
+                                        </tr>
+                                        <tr th:if="${generationResult != null && generationResult.containsKey('leads')}">
+                                            <td>Leads</td>
+                                            <td th:text="${generationResult.get('requested_leads')}">0</td>
+                                            <td th:text="${generationResult.get('leads')}">0</td>
+                                            <td><span class="badge bg-success">Succès</span></td>
+                                        </tr>
+                                        <tr th:if="${generationResult != null && generationResult.containsKey('invoices')}">
+                                            <td>Factures</td>
+                                            <td th:text="${generationResult.get('requested_invoices')}">0</td>
+                                            <td th:text="${generationResult.get('invoices')}">0</td>
+                                            <td><span class="badge bg-success">Succès</span></td>
+                                        </tr>
+                                        <tr th:if="${generationResult != null && generationResult.containsKey('comments')}">
+                                            <td>Commentaires</td>
+                                            <td th:text="${generationResult.get('requested_comments')}">0</td>
+                                            <td th:text="${generationResult.get('comments')}">0</td>
+                                            <td><span class="badge bg-success">Succès</span></td>
+                                        </tr>
+                                        <tr th:if="${generationResult != null && generationResult.containsKey('documents')}">
+                                            <td>Documents</td>
+                                            <td th:text="${generationResult.get('requested_documents')}">0</td>
+                                            <td th:text="${generationResult.get('documents')}">0</td>
+                                            <td><span class="badge bg-success">Succès</span></td>
+                                        </tr>
+                                    </tbody>
+                                </table>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Generator Form -->
+            <div class="row">
+                <div class="col-md-12">
+                    <div class="card shadow mb-4">
+                        <div class="card-header py-3">
+                            <h6 class="m-0 font-weight-bold text-primary">Générer des données factices</h6>
+                        </div>
+                        <div class="card-body">
+                            <form th:action="@{/dashboard/generate-dummy-data}" method="post">
+                                <div class="row">
+                                    <div class="col-md-6">
+                                        <div class="mb-3">
+                                            <label for="clients" class="form-label">Nombre de clients</label>
+                                            <input type="number" class="form-control" id="clients" name="clients" min="0" max="100" value="10">
+                                            <div class="form-text">Maximum recommandé: 100</div>
+                                        </div>
+                                        <div class="mb-3">
+                                            <label for="projects" class="form-label">Nombre de projets</label>
+                                            <input type="number" class="form-control" id="projects" name="projects" min="0" max="200" value="20">
+                                            <div class="form-text">Maximum recommandé: 200</div>
+                                        </div>
+                                        <div class="mb-3">
+                                            <label for="tasks" class="form-label">Nombre de tâches</label>
+                                            <input type="number" class="form-control" id="tasks" name="tasks" min="0" max="500" value="50">
+                                            <div class="form-text">Maximum recommandé: 500</div>
+                                        </div>
+                                        <div class="mb-3">
+                                            <label for="leads" class="form-label">Nombre de leads</label>
+                                            <input type="number" class="form-control" id="leads" name="leads" min="0" max="100" value="15">
+                                            <div class="form-text">Maximum recommandé: 100</div>
+                                        </div>
+                                    </div>
+                                    <div class="col-md-6">
+                                        <div class="mb-3">
+                                            <label for="invoices" class="form-label">Nombre de factures</label>
+                                            <input type="number" class="form-control" id="invoices" name="invoices" min="0" max="200" value="30">
+                                            <div class="form-text">Maximum recommandé: 200</div>
+                                        </div>
+                                        <div class="mb-3">
+                                            <label for="comments" class="form-label">Nombre de commentaires</label>
+                                            <input type="number" class="form-control" id="comments" name="comments" min="0" max="300" value="100">
+                                            <div class="form-text">Maximum recommandé: 300</div>
+                                        </div>
+                                        <div class="mb-3">
+                                            <label for="documents" class="form-label">Nombre de documents</label>
+                                            <input type="number" class="form-control" id="documents" name="documents" min="0" max="100" value="25">
+                                            <div class="form-text">Maximum recommandé: 100</div>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="alert alert-info" th:if="${demoMode}">
+                                    <i class="fas fa-info-circle"></i> Mode démo activé. La génération de données sera simulée.
+                                </div>
+                                <div class="d-grid gap-2 d-md-flex justify-content-md-end mt-3">
+                                    <button type="submit" class="btn btn-primary">
+                                        <i class="fas fa-magic"></i> Générer les données
+                                    </button>
+                                </div>
+                            </form>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Clean Data Form -->
+            <div class="row">
+                <div class="col-md-12">
+                    <div class="card shadow mb-4">
+                        <div class="card-header py-3">
+                            <h6 class="m-0 font-weight-bold text-danger">Supprimer les données factices</h6>
+                        </div>
+                        <div class="card-body">
+                            <p class="mb-3">
+                                Cette action supprimera toutes les données factices générées. Cette opération est irréversible.
+                            </p>
+                            <form th:action="@{/dashboard/clean-dummy-data}" method="post">
+                                <div class="alert alert-warning">
+                                    <i class="fas fa-exclamation-triangle"></i> Attention: Cette action supprimera toutes les données factices générées.
+                                </div>
+                                <div class="d-grid gap-2 d-md-flex justify-content-md-end mt-3">
+                                    <button type="submit" class="btn btn-danger" onclick="return confirm('Êtes-vous sûr de vouloir supprimer toutes les données factices?');">
+                                        <i class="fas fa-trash-alt"></i> Supprimer toutes les données factices
+                                    </button>
+                                </div>
+                            </form>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</body>
+</html>

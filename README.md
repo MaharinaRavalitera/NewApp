@@ -14,6 +14,24 @@ Cette application Spring Boot sert d'interface complémentaire au CRM DayByDay d
 - Gestion des clients, projets, tâches, leads et factures
 - Générateur de données factices pour le CRM
 
+## Générateur de données factices
+
+Le générateur de données factices permet de créer rapidement un ensemble de données de test pour votre CRM. Vous pouvez spécifier le nombre d'entrées à générer pour chaque type d'entité :
+
+- Clients
+- Projets
+- Tâches
+- Leads
+- Factures
+- Commentaires
+- Documents
+
+Pour utiliser cette fonctionnalité :
+1. Accédez à "Dummy Data Generator" dans le menu latéral du tableau de bord
+2. Spécifiez le nombre d'entrées souhaitées pour chaque type de données
+3. Cliquez sur "Générer les données"
+4. Vous pouvez également supprimer toutes les données factices en cliquant sur "Nettoyer les données"
+
 ## Prérequis
 
 - Java 11 ou supérieur
