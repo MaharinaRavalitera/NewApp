@@ -1,0 +1,290 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org" 
+      xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
+      layout:decorate="~{dashboard/layout}">
+<head>
+    <title>Paiements - DayByDay CRM</title>
+</head>
+<body>
+    <div layout:fragment="content">
+        <div class="container-fluid">
+            <!-- Page Heading -->
+            <div class="d-sm-flex align-items-center justify-content-between mb-4">
+                <h1 class="h3 mb-0 text-gray-800">Paiements</h1>
+                <a href="#" class="d-none d-sm-inline-block btn btn-sm btn-primary shadow-sm">
+                    <i class="fas fa-plus fa-sm text-white-50"></i> Nouveau paiement
+                </a>
+            </div>
+
+            <!-- Payments Table -->
+            <div class="card shadow mb-4">
+                <div class="card-header py-3">
+                    <h6 class="m-0 font-weight-bold text-primary">Liste des paiements</h6>
+                </div>
+                <div class="card-body">
+                    <div class="table-responsive">
+                        <table class="table table-bordered" id="paymentsTable" width="100%" cellspacing="0">
+                            <thead>
+                                <tr>
+                                    <th>Numéro</th>
+                                    <th>Facture</th>
+                                    <th>Client</th>
+                                    <th>Date</th>
+                                    <th>Montant</th>
+                                    <th>Méthode</th>
+                                    <th>Actions</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <tr th:each="payment : ${payments}">
+                                    <td th:text="${payment.paymentNumber}"></td>
+                                    <td th:text="${payment.invoiceNumber}"></td>
+                                    <td th:text="${payment.clientName}"></td>
+                                    <td th:text="${#temporals.format(payment.paymentDate, 'dd/MM/yyyy')}"></td>
+                                    <td th:text="${#numbers.formatDecimal(payment.amount, 0, 'COMMA', 2, 'POINT')} + ' €'"></td>
+                                    <td th:text="${payment.paymentMethod}"></td>
+                                    <td>
+                                        <a href="#" class="btn btn-info btn-sm">
+                                            <i class="fas fa-eye"></i>
+                                        </a>
+                                        <a href="#" class="btn btn-primary btn-sm">
+                                            <i class="fas fa-edit"></i>
+                                        </a>
+                                        <a href="#" class="btn btn-secondary btn-sm">
+                                            <i class="fas fa-print"></i>
+                                        </a>
+                                    </td>
+                                </tr>
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Payment Charts -->
+            <div class="row">
+                <div class="col-xl-6 col-lg-6">
+                    <div class="card shadow mb-4">
+                        <div class="card-header py-3">
+                            <h6 class="m-0 font-weight-bold text-primary">Méthodes de paiement</h6>
+                        </div>
+                        <div class="card-body">
+                            <div class="chart-pie pt-4">
+                                <canvas id="paymentMethodChart"></canvas>
+                            </div>
+                            <div class="mt-4 text-center small">
+                                <span class="mr-2">
+                                    <i class="fas fa-circle text-primary"></i> Virement bancaire
+                                </span>
+                                <span class="mx-2">
+                                    <i class="fas fa-circle text-success"></i> Carte bancaire
+                                </span>
+                                <span class="ml-2">
+                                    <i class="fas fa-circle text-info"></i> Chèque
+                                </span>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                
+                <div class="col-xl-6 col-lg-6">
+                    <div class="card shadow mb-4">
+                        <div class="card-header py-3">
+                            <h6 class="m-0 font-weight-bold text-primary">Paiements par client</h6>
+                        </div>
+                        <div class="card-body">
+                            <div class="chart-bar">
+                                <canvas id="paymentClientChart"></canvas>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Monthly Payments Chart -->
+            <div class="row">
+                <div class="col-xl-12 col-lg-12">
+                    <div class="card shadow mb-4">
+                        <div class="card-header py-3">
+                            <h6 class="m-0 font-weight-bold text-primary">Paiements mensuels</h6>
+                        </div>
+                        <div class="card-body">
+                            <div class="chart-area">
+                                <canvas id="monthlyPaymentsChart"></canvas>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <th:block layout:fragment="scripts">
+        <script>
+            // Payment Method Chart
+            var ctx = document.getElementById("paymentMethodChart");
+            var paymentMethodChart = new Chart(ctx, {
+                type: 'doughnut',
+                data: {
+                    labels: ["Virement bancaire", "Carte bancaire", "Chèque"],
+                    datasets: [{
+                        data: [1, 1, 0],
+                        backgroundColor: ['#4e73df', '#1cc88a', '#36b9cc'],
+                        hoverBackgroundColor: ['#2e59d9', '#17a673', '#2c9faf'],
+                        hoverBorderColor: "rgba(234, 236, 244, 1)",
+                    }],
+                },
+                options: {
+                    maintainAspectRatio: false,
+                    plugins: {
+                        legend: {
+                            display: false
+                        }
+                    },
+                    cutout: '70%',
+                }
+            });
+            
+            // Payment Client Chart
+            var ctx2 = document.getElementById("paymentClientChart");
+            var paymentClientChart = new Chart(ctx2, {
+                type: 'bar',
+                data: {
+                    labels: ["Entreprise ABC", "Société XYZ", "Groupe 123"],
+                    datasets: [{
+                        label: "Montant (€)",
+                        backgroundColor: "#4e73df",
+                        hoverBackgroundColor: "#2e59d9",
+                        data: [7500, 0, 18500]
+                    }],
+                },
+                options: {
+                    maintainAspectRatio: false,
+                    scales: {
+                        x: {
+                            grid: {
+                                display: false
+                            }
+                        },
+                        y: {
+                            grid: {
+                                borderDash: [2],
+                                drawBorder: false
+                            },
+                            ticks: {
+                                callback: function(value) {
+                                    return value + ' €';
+                                }
+                            }
+                        }
+                    },
+                    plugins: {
+                        tooltip: {
+                            callbacks: {
+                                label: function(context) {
+                                    var label = context.dataset.label || '';
+                                    if (label) {
+                                        label += ': ';
+                                    }
+                                    if (context.parsed.y !== null) {
+                                        label += new Intl.NumberFormat('fr-FR', { style: 'currency', currency: 'EUR' }).format(context.parsed.y);
+                                    }
+                                    return label;
+                                }
+                            }
+                        }
+                    }
+                }
+            });
+            
+            // Monthly Payments Chart
+            var ctx3 = document.getElementById("monthlyPaymentsChart");
+            var monthlyPaymentsChart = new Chart(ctx3, {
+                type: 'line',
+                data: {
+                    labels: ["Jan", "Fév", "Mar", "Avr", "Mai", "Juin", "Juil", "Août", "Sep", "Oct", "Nov", "Déc"],
+                    datasets: [{
+                        label: "Montant reçu",
+                        lineTension: 0.3,
+                        backgroundColor: "rgba(28, 200, 138, 0.05)",
+                        borderColor: "rgba(28, 200, 138, 1)",
+                        pointRadius: 3,
+                        pointBackgroundColor: "rgba(28, 200, 138, 1)",
+                        pointBorderColor: "rgba(28, 200, 138, 1)",
+                        pointHoverRadius: 3,
+                        pointHoverBackgroundColor: "rgba(28, 200, 138, 1)",
+                        pointHoverBorderColor: "rgba(28, 200, 138, 1)",
+                        pointHitRadius: 10,
+                        pointBorderWidth: 2,
+                        data: [0, 0, 18500, 0, 0, 0, 0, 0, 0, 7500, 0, 0],
+                    }],
+                },
+                options: {
+                    maintainAspectRatio: false,
+                    layout: {
+                        padding: {
+                            left: 10,
+                            right: 25,
+                            top: 25,
+                            bottom: 0
+                        }
+                    },
+                    scales: {
+                        x: {
+                            grid: {
+                                display: false,
+                                drawBorder: false
+                            }
+                        },
+                        y: {
+                            ticks: {
+                                maxTicksLimit: 5,
+                                padding: 10,
+                                callback: function(value) {
+                                    return value + ' €';
+                                }
+                            },
+                            grid: {
+                                color: "rgb(234, 236, 244)",
+                                zeroLineColor: "rgb(234, 236, 244)",
+                                drawBorder: false,
+                                borderDash: [2],
+                                zeroLineBorderDash: [2]
+                            }
+                        },
+                    },
+                    plugins: {
+                        tooltip: {
+                            backgroundColor: "rgb(255,255,255)",
+                            bodyColor: "#858796",
+                            titleMarginBottom: 10,
+                            titleColor: '#6e707e',
+                            titleFontSize: 14,
+                            borderColor: '#dddfeb',
+                            borderWidth: 1,
+                            xPadding: 15,
+                            yPadding: 15,
+                            displayColors: false,
+                            intersect: false,
+                            mode: 'index',
+                            caretPadding: 10,
+                            callbacks: {
+                                label: function(context) {
+                                    var label = context.dataset.label || '';
+                                    if (label) {
+                                        label += ': ';
+                                    }
+                                    if (context.parsed.y !== null) {
+                                        label += new Intl.NumberFormat('fr-FR', { style: 'currency', currency: 'EUR' }).format(context.parsed.y);
+                                    }
+                                    return label;
+                                }
+                            }
+                        }
+                    }
+                }
+            });
+        </script>
+    </th:block>
+</body>
+</html>

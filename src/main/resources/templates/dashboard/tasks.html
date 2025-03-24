@@ -1,0 +1,180 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org" 
+      xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
+      layout:decorate="~{dashboard/layout}">
+<head>
+    <title>Tâches - DayByDay CRM</title>
+</head>
+<body>
+    <div layout:fragment="content">
+        <div class="container-fluid">
+            <!-- Page Heading -->
+            <div class="d-sm-flex align-items-center justify-content-between mb-4">
+                <h1 class="h3 mb-0 text-gray-800">Tâches</h1>
+                <a href="#" class="d-none d-sm-inline-block btn btn-sm btn-primary shadow-sm">
+                    <i class="fas fa-plus fa-sm text-white-50"></i> Nouvelle tâche
+                </a>
+            </div>
+
+            <!-- Tasks Table -->
+            <div class="card shadow mb-4">
+                <div class="card-header py-3">
+                    <h6 class="m-0 font-weight-bold text-primary">Liste des tâches</h6>
+                </div>
+                <div class="card-body">
+                    <div class="table-responsive">
+                        <table class="table table-bordered" id="tasksTable" width="100%" cellspacing="0">
+                            <thead>
+                                <tr>
+                                    <th>ID</th>
+                                    <th>Titre</th>
+                                    <th>Projet</th>
+                                    <th>Assigné à</th>
+                                    <th>Deadline</th>
+                                    <th>Heures allouées</th>
+                                    <th>Heures passées</th>
+                                    <th>Statut</th>
+                                    <th>Actions</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <tr th:each="task : ${tasks}">
+                                    <td th:text="${task.id}"></td>
+                                    <td th:text="${task.title}"></td>
+                                    <td th:text="${task.projectName}"></td>
+                                    <td th:text="${task.assignedUserName}"></td>
+                                    <td th:text="${#temporals.format(task.deadline, 'dd/MM/yyyy')}"></td>
+                                    <td th:text="${task.hoursAllocated}"></td>
+                                    <td th:text="${task.hoursSpent}"></td>
+                                    <td>
+                                        <span th:class="${task.status == 'En cours' ? 'badge bg-primary' : 
+                                                         (task.status == 'Terminé' ? 'badge bg-success' : 'badge bg-warning')}"
+                                              th:text="${task.status}">
+                                        </span>
+                                    </td>
+                                    <td>
+                                        <a href="#" class="btn btn-info btn-sm">
+                                            <i class="fas fa-eye"></i>
+                                        </a>
+                                        <a href="#" class="btn btn-primary btn-sm">
+                                            <i class="fas fa-edit"></i>
+                                        </a>
+                                        <a href="#" class="btn btn-danger btn-sm">
+                                            <i class="fas fa-trash"></i>
+                                        </a>
+                                    </td>
+                                </tr>
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Task Charts -->
+            <div class="row">
+                <div class="col-xl-6 col-lg-6">
+                    <div class="card shadow mb-4">
+                        <div class="card-header py-3">
+                            <h6 class="m-0 font-weight-bold text-primary">Statut des tâches</h6>
+                        </div>
+                        <div class="card-body">
+                            <div class="chart-pie pt-4">
+                                <canvas id="taskStatusChart"></canvas>
+                            </div>
+                            <div class="mt-4 text-center small">
+                                <span class="mr-2">
+                                    <i class="fas fa-circle text-primary"></i> En cours
+                                </span>
+                                <span class="mx-2">
+                                    <i class="fas fa-circle text-success"></i> Terminées
+                                </span>
+                                <span class="ml-2">
+                                    <i class="fas fa-circle text-warning"></i> En attente
+                                </span>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                
+                <div class="col-xl-6 col-lg-6">
+                    <div class="card shadow mb-4">
+                        <div class="card-header py-3">
+                            <h6 class="m-0 font-weight-bold text-primary">Heures allouées vs Heures passées</h6>
+                        </div>
+                        <div class="card-body">
+                            <div class="chart-bar">
+                                <canvas id="taskHoursChart"></canvas>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <th:block layout:fragment="scripts">
+        <script>
+            // Task Status Chart
+            var ctx = document.getElementById("taskStatusChart");
+            var taskStatusChart = new Chart(ctx, {
+                type: 'doughnut',
+                data: {
+                    labels: ["En cours", "Terminées", "En attente"],
+                    datasets: [{
+                        data: [2, 1, 0],
+                        backgroundColor: ['#4e73df', '#1cc88a', '#f6c23e'],
+                        hoverBackgroundColor: ['#2e59d9', '#17a673', '#dda20a'],
+                        hoverBorderColor: "rgba(234, 236, 244, 1)",
+                    }],
+                },
+                options: {
+                    maintainAspectRatio: false,
+                    plugins: {
+                        legend: {
+                            display: false
+                        }
+                    },
+                    cutout: '70%',
+                }
+            });
+            
+            // Task Hours Chart
+            var ctx2 = document.getElementById("taskHoursChart");
+            var taskHoursChart = new Chart(ctx2, {
+                type: 'bar',
+                data: {
+                    labels: ["Maquettes graphiques", "Développement frontend", "API REST"],
+                    datasets: [
+                        {
+                            label: "Heures allouées",
+                            backgroundColor: "#4e73df",
+                            data: [40, 60, 80]
+                        },
+                        {
+                            label: "Heures passées",
+                            backgroundColor: "#1cc88a",
+                            data: [38, 25, 30]
+                        }
+                    ],
+                },
+                options: {
+                    maintainAspectRatio: false,
+                    scales: {
+                        x: {
+                            grid: {
+                                display: false
+                            }
+                        },
+                        y: {
+                            grid: {
+                                borderDash: [2],
+                                drawBorder: false
+                            }
+                        }
+                    }
+                }
+            });
+        </script>
+    </th:block>
+</body>
+</html>

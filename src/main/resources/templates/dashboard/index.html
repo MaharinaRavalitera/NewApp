@@ -1,0 +1,431 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org" 
+      xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
+      layout:decorate="~{dashboard/layout}">
+<head>
+    <title>Tableau de bord - DayByDay CRM</title>
+</head>
+<body>
+    <div layout:fragment="content">
+        <div class="container-fluid">
+            <!-- Page Heading -->
+            <div class="d-sm-flex align-items-center justify-content-between mb-4">
+                <h1 class="h3 mb-0 text-gray-800">Tableau de bord</h1>
+                <a href="#" class="d-none d-sm-inline-block btn btn-sm btn-primary shadow-sm">
+                    <i class="fas fa-download fa-sm text-white-50"></i> Générer un rapport
+                </a>
+            </div>
+
+            <!-- Content Row - Statistics Cards -->
+            <div class="row">
+                <!-- Clients Card -->
+                <div class="col-xl-3 col-md-6 mb-4">
+                    <div class="card border-left-primary shadow h-100 py-2 stat-card primary">
+                        <div class="card-body">
+                            <div class="row no-gutters align-items-center">
+                                <div class="col mr-2">
+                                    <div class="text-xs font-weight-bold text-primary text-uppercase mb-1 stat-label">
+                                        Clients</div>
+                                    <div class="h5 mb-0 font-weight-bold text-gray-800 stat-value" th:text="${stats.totalClients}">0</div>
+                                </div>
+                                <div class="col-auto">
+                                    <i class="fas fa-users fa-2x text-gray-300 stat-icon"></i>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Projects Card -->
+                <div class="col-xl-3 col-md-6 mb-4">
+                    <div class="card border-left-success shadow h-100 py-2 stat-card success">
+                        <div class="card-body">
+                            <div class="row no-gutters align-items-center">
+                                <div class="col mr-2">
+                                    <div class="text-xs font-weight-bold text-success text-uppercase mb-1 stat-label">
+                                        Projets</div>
+                                    <div class="h5 mb-0 font-weight-bold text-gray-800 stat-value" th:text="${stats.totalProjects}">0</div>
+                                </div>
+                                <div class="col-auto">
+                                    <i class="fas fa-project-diagram fa-2x text-gray-300 stat-icon"></i>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Tasks Card -->
+                <div class="col-xl-3 col-md-6 mb-4">
+                    <div class="card border-left-info shadow h-100 py-2 stat-card info">
+                        <div class="card-body">
+                            <div class="row no-gutters align-items-center">
+                                <div class="col mr-2">
+                                    <div class="text-xs font-weight-bold text-info text-uppercase mb-1 stat-label">
+                                        Tâches</div>
+                                    <div class="h5 mb-0 font-weight-bold text-gray-800 stat-value" th:text="${stats.totalTasks}">0</div>
+                                </div>
+                                <div class="col-auto">
+                                    <i class="fas fa-tasks fa-2x text-gray-300 stat-icon"></i>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Leads Card -->
+                <div class="col-xl-3 col-md-6 mb-4">
+                    <div class="card border-left-warning shadow h-100 py-2 stat-card warning">
+                        <div class="card-body">
+                            <div class="row no-gutters align-items-center">
+                                <div class="col mr-2">
+                                    <div class="text-xs font-weight-bold text-warning text-uppercase mb-1 stat-label">
+                                        Offres</div>
+                                    <div class="h5 mb-0 font-weight-bold text-gray-800 stat-value" th:text="${stats.totalLeads}">0</div>
+                                </div>
+                                <div class="col-auto">
+                                    <i class="fas fa-funnel-dollar fa-2x text-gray-300 stat-icon"></i>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Content Row - More Statistics Cards -->
+            <div class="row">
+                <!-- Invoices Card -->
+                <div class="col-xl-3 col-md-6 mb-4">
+                    <div class="card border-left-danger shadow h-100 py-2 stat-card danger">
+                        <div class="card-body">
+                            <div class="row no-gutters align-items-center">
+                                <div class="col mr-2">
+                                    <div class="text-xs font-weight-bold text-danger text-uppercase mb-1 stat-label">
+                                        Factures</div>
+                                    <div class="h5 mb-0 font-weight-bold text-gray-800 stat-value" th:text="${stats.totalInvoices}">0</div>
+                                </div>
+                                <div class="col-auto">
+                                    <i class="fas fa-file-invoice-dollar fa-2x text-gray-300 stat-icon"></i>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Payments Card -->
+                <div class="col-xl-3 col-md-6 mb-4">
+                    <div class="card border-left-primary shadow h-100 py-2 stat-card primary">
+                        <div class="card-body">
+                            <div class="row no-gutters align-items-center">
+                                <div class="col mr-2">
+                                    <div class="text-xs font-weight-bold text-primary text-uppercase mb-1 stat-label">
+                                        Paiements</div>
+                                    <div class="h5 mb-0 font-weight-bold text-gray-800 stat-value" th:text="${stats.totalPayments}">0</div>
+                                </div>
+                                <div class="col-auto">
+                                    <i class="fas fa-money-bill-wave fa-2x text-gray-300 stat-icon"></i>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Total Revenue Card -->
+                <div class="col-xl-3 col-md-6 mb-4">
+                    <div class="card border-left-success shadow h-100 py-2 stat-card success">
+                        <div class="card-body">
+                            <div class="row no-gutters align-items-center">
+                                <div class="col mr-2">
+                                    <div class="text-xs font-weight-bold text-success text-uppercase mb-1 stat-label">
+                                        Revenus totaux</div>
+                                    <div class="h5 mb-0 font-weight-bold text-gray-800 stat-value" th:text="${#numbers.formatDecimal(stats.totalRevenue, 0, 'COMMA', 2, 'POINT')} + ' €'">0 €</div>
+                                </div>
+                                <div class="col-auto">
+                                    <i class="fas fa-euro-sign fa-2x text-gray-300 stat-icon"></i>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Outstanding Invoices Card -->
+                <div class="col-xl-3 col-md-6 mb-4">
+                    <div class="card border-left-warning shadow h-100 py-2 stat-card warning">
+                        <div class="card-body">
+                            <div class="row no-gutters align-items-center">
+                                <div class="col mr-2">
+                                    <div class="text-xs font-weight-bold text-warning text-uppercase mb-1 stat-label">
+                                        Factures impayées</div>
+                                    <div class="h5 mb-0 font-weight-bold text-gray-800 stat-value" th:text="${#numbers.formatDecimal(stats.outstandingInvoices, 0, 'COMMA', 2, 'POINT')} + ' €'">0 €</div>
+                                </div>
+                                <div class="col-auto">
+                                    <i class="fas fa-clock fa-2x text-gray-300 stat-icon"></i>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Content Row - Charts -->
+            <div class="row">
+                <!-- Revenue Chart -->
+                <div class="col-xl-8 col-lg-7">
+                    <div class="card shadow mb-4">
+                        <div class="card-header py-3 d-flex flex-row align-items-center justify-content-between">
+                            <h6 class="m-0 font-weight-bold text-primary">Revenus mensuels</h6>
+                        </div>
+                        <div class="card-body">
+                            <div class="chart-area">
+                                <canvas id="revenueChart"></canvas>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Pie Chart -->
+                <div class="col-xl-4 col-lg-5">
+                    <div class="card shadow mb-4">
+                        <div class="card-header py-3 d-flex flex-row align-items-center justify-content-between">
+                            <h6 class="m-0 font-weight-bold text-primary">Répartition des projets</h6>
+                        </div>
+                        <div class="card-body">
+                            <div class="chart-pie pt-4 pb-2">
+                                <canvas id="projectStatusChart"></canvas>
+                            </div>
+                            <div class="mt-4 text-center small">
+                                <span class="mr-2">
+                                    <i class="fas fa-circle text-primary"></i> En cours
+                                </span>
+                                <span class="mx-2">
+                                    <i class="fas fa-circle text-success"></i> Terminés
+                                </span>
+                                <span class="ml-2">
+                                    <i class="fas fa-circle text-info"></i> En attente
+                                </span>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Content Row - Recent Activities -->
+            <div class="row">
+                <!-- Recent Projects -->
+                <div class="col-lg-6 mb-4">
+                    <div class="card shadow mb-4">
+                        <div class="card-header py-3">
+                            <h6 class="m-0 font-weight-bold text-primary">Projets récents</h6>
+                        </div>
+                        <div class="card-body">
+                            <div class="table-responsive">
+                                <table class="table table-bordered" width="100%" cellspacing="0">
+                                    <thead>
+                                        <tr>
+                                            <th>Titre</th>
+                                            <th>Client</th>
+                                            <th>Statut</th>
+                                            <th>Deadline</th>
+                                        </tr>
+                                    </thead>
+                                    <tbody>
+                                        <tr>
+                                            <td>Refonte du site web</td>
+                                            <td>Entreprise ABC</td>
+                                            <td><span class="badge bg-primary">En cours</span></td>
+                                            <td>01/05/2025</td>
+                                        </tr>
+                                        <tr>
+                                            <td>Application mobile</td>
+                                            <td>Société XYZ</td>
+                                            <td><span class="badge bg-primary">En cours</span></td>
+                                            <td>15/06/2025</td>
+                                        </tr>
+                                        <tr>
+                                            <td>Système de gestion</td>
+                                            <td>Groupe 123</td>
+                                            <td><span class="badge bg-success">Terminé</span></td>
+                                            <td>10/03/2025</td>
+                                        </tr>
+                                    </tbody>
+                                </table>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Recent Invoices -->
+                <div class="col-lg-6 mb-4">
+                    <div class="card shadow mb-4">
+                        <div class="card-header py-3">
+                            <h6 class="m-0 font-weight-bold text-primary">Factures récentes</h6>
+                        </div>
+                        <div class="card-body">
+                            <div class="table-responsive">
+                                <table class="table table-bordered" width="100%" cellspacing="0">
+                                    <thead>
+                                        <tr>
+                                            <th>Numéro</th>
+                                            <th>Client</th>
+                                            <th>Montant</th>
+                                            <th>Statut</th>
+                                        </tr>
+                                    </thead>
+                                    <tbody>
+                                        <tr>
+                                            <td>INV-2025-001</td>
+                                            <td>Entreprise ABC</td>
+                                            <td>7 500,00 €</td>
+                                            <td><span class="badge bg-success">Payée</span></td>
+                                        </tr>
+                                        <tr>
+                                            <td>INV-2025-002</td>
+                                            <td>Société XYZ</td>
+                                            <td>12 500,00 €</td>
+                                            <td><span class="badge bg-warning">En attente</span></td>
+                                        </tr>
+                                        <tr>
+                                            <td>INV-2025-003</td>
+                                            <td>Groupe 123</td>
+                                            <td>18 500,00 €</td>
+                                            <td><span class="badge bg-success">Payée</span></td>
+                                        </tr>
+                                    </tbody>
+                                </table>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <th:block layout:fragment="scripts">
+        <script>
+            // Revenue Chart
+            var ctx = document.getElementById("revenueChart");
+            var revenueChart = new Chart(ctx, {
+                type: 'line',
+                data: {
+                    labels: ["Jan", "Fév", "Mar", "Avr", "Mai", "Juin", "Juil", "Août", "Sep", "Oct", "Nov", "Déc"],
+                    datasets: [{
+                        label: "Revenus",
+                        lineTension: 0.3,
+                        backgroundColor: "rgba(78, 115, 223, 0.05)",
+                        borderColor: "rgba(78, 115, 223, 1)",
+                        pointRadius: 3,
+                        pointBackgroundColor: "rgba(78, 115, 223, 1)",
+                        pointBorderColor: "rgba(78, 115, 223, 1)",
+                        pointHoverRadius: 3,
+                        pointHoverBackgroundColor: "rgba(78, 115, 223, 1)",
+                        pointHoverBorderColor: "rgba(78, 115, 223, 1)",
+                        pointHitRadius: 10,
+                        pointBorderWidth: 2,
+                        data: [10000, 15000, 20000, 25000, 30000, 25000, 20000, 25000, 30000, 35000, 40000, 45000],
+                    }],
+                },
+                options: {
+                    maintainAspectRatio: false,
+                    layout: {
+                        padding: {
+                            left: 10,
+                            right: 25,
+                            top: 25,
+                            bottom: 0
+                        }
+                    },
+                    scales: {
+                        x: {
+                            grid: {
+                                display: false,
+                                drawBorder: false
+                            }
+                        },
+                        y: {
+                            ticks: {
+                                maxTicksLimit: 5,
+                                padding: 10,
+                                callback: function(value, index, values) {
+                                    return value + ' €';
+                                }
+                            },
+                            grid: {
+                                color: "rgb(234, 236, 244)",
+                                zeroLineColor: "rgb(234, 236, 244)",
+                                drawBorder: false,
+                                borderDash: [2],
+                                zeroLineBorderDash: [2]
+                            }
+                        },
+                    },
+                    plugins: {
+                        legend: {
+                            display: false
+                        },
+                        tooltip: {
+                            backgroundColor: "rgb(255,255,255)",
+                            bodyColor: "#858796",
+                            titleMarginBottom: 10,
+                            titleColor: '#6e707e',
+                            titleFontSize: 14,
+                            borderColor: '#dddfeb',
+                            borderWidth: 1,
+                            xPadding: 15,
+                            yPadding: 15,
+                            displayColors: false,
+                            intersect: false,
+                            mode: 'index',
+                            caretPadding: 10,
+                            callbacks: {
+                                label: function(context) {
+                                    var label = context.dataset.label || '';
+                                    if (label) {
+                                        label += ': ';
+                                    }
+                                    if (context.parsed.y !== null) {
+                                        label += new Intl.NumberFormat('fr-FR', { style: 'currency', currency: 'EUR' }).format(context.parsed.y);
+                                    }
+                                    return label;
+                                }
+                            }
+                        }
+                    }
+                }
+            });
+
+            // Project Status Pie Chart
+            var ctx2 = document.getElementById("projectStatusChart");
+            var projectStatusChart = new Chart(ctx2, {
+                type: 'doughnut',
+                data: {
+                    labels: ["En cours", "Terminés", "En attente"],
+                    datasets: [{
+                        data: [55, 30, 15],
+                        backgroundColor: ['#4e73df', '#1cc88a', '#36b9cc'],
+                        hoverBackgroundColor: ['#2e59d9', '#17a673', '#2c9faf'],
+                        hoverBorderColor: "rgba(234, 236, 244, 1)",
+                    }],
+                },
+                options: {
+                    maintainAspectRatio: false,
+                    plugins: {
+                        legend: {
+                            display: false
+                        },
+                        tooltip: {
+                            backgroundColor: "rgb(255,255,255)",
+                            bodyColor: "#858796",
+                            borderColor: '#dddfeb',
+                            borderWidth: 1,
+                            xPadding: 15,
+                            yPadding: 15,
+                            displayColors: false,
+                            caretPadding: 10,
+                        }
+                    },
+                    cutout: '70%',
+                },
+            });
+        </script>
+    </th:block>
+</body>
+</html>

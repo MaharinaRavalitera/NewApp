@@ -1,0 +1,108 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <title>DayByDay NewApp - Accueil</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha1/dist/css/bootstrap.min.css" rel="stylesheet">
+</head>
+<body>
+    <div class="container mt-5">
+        <div class="row">
+            <div class="col-md-8 offset-md-2">
+                <div class="card">
+                    <div class="card-header bg-primary text-white">
+                        <h2 class="text-center">DayByDay NewApp</h2>
+                    </div>
+                    <div class="card-body">
+                        <div th:if="${isLoggedIn}">
+                            <h3>Bienvenue!</h3>
+                            <p>Vous êtes connecté avec succès à l'application DayByDay.</p>
+                            <p>Votre ID utilisateur: <span th:text="${userId}"></span></p>
+                            <a href="/api/auth/logout" class="btn btn-danger">Se déconnecter</a>
+                        </div>
+                        <div th:unless="${isLoggedIn}">
+                            <h3>Connexion à DayByDay</h3>
+                            <p>Cette application Spring Boot s'intègre avec l'application Laravel DayByDay CRM.</p>
+                            
+                            <!-- Messages d'erreur -->
+                            <div th:if="${param.error}" class="alert alert-danger">
+                                <div th:if="${param.error[0] == 'invalid_credentials'}">
+                                    Identifiants invalides. Veuillez vérifier votre email et mot de passe.
+                                </div>
+                                <div th:if="${param.error[0] == 'api_unavailable'}">
+                                    L'API Laravel n'est pas accessible. Veuillez vérifier que le serveur Laravel est en cours d'exécution.
+                                </div>
+                                <div th:if="${param.error[0] == 'server_error'}">
+                                    Une erreur s'est produite lors de la connexion. Veuillez réessayer.
+                                </div>
+                            </div>
+                            
+                            <!-- Message de statut de connexion -->
+                            <div id="loginStatus" class="alert d-none mb-3"></div>
+                            
+                            <!-- Test de connexion à l'API -->
+                            <div class="mb-3">
+                                <button id="testApiBtn" class="btn btn-info mb-3">Tester la connexion à l'API</button>
+                                <div id="apiTestResult" class="alert d-none"></div>
+                            </div>
+                            
+                            <!-- Formulaire de connexion simplifié -->
+                            <div class="card">
+                                <div class="card-body">
+                                    <h4 class="card-title mb-3">Connexion</h4>
+                                    <form action="/api/auth/login-form" method="post">
+                                        <div class="mb-3">
+                                            <label for="email" class="form-label">Email</label>
+                                            <input type="email" name="email" class="form-control" id="email" required value="admin@admin.com">
+                                        </div>
+                                        <div class="mb-3">
+                                            <label for="password" class="form-label">Mot de passe</label>
+                                            <input type="password" name="password" class="form-control" id="password" required value="admin123">
+                                        </div>
+                                        <div class="mb-3 form-text">
+                                            En mode démo, utilisez: <strong>admin@admin.com</strong> / <strong>admin123</strong>
+                                        </div>
+                                        <button type="submit" class="btn btn-primary w-100">Se connecter</button>
+                                    </form>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="card-footer text-center">
+                        <p>DayByDay CRM &copy; 2025</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha1/dist/js/bootstrap.bundle.min.js"></script>
+    <script>
+        // Fonction pour tester la connexion à l'API
+        document.getElementById('testApiBtn').addEventListener('click', function() {
+            const resultDiv = document.getElementById('apiTestResult');
+            resultDiv.classList.remove('d-none', 'alert-success', 'alert-danger');
+            resultDiv.classList.add('alert-info');
+            resultDiv.textContent = 'Test de connexion en cours...';
+            
+            fetch('/api/auth/test')
+                .then(response => response.json())
+                .then(data => {
+                    resultDiv.classList.remove('alert-info');
+                    if (data.status === 'success') {
+                        resultDiv.classList.add('alert-success');
+                        resultDiv.textContent = 'Connexion à l\'API Laravel réussie! Vous pouvez vous connecter.';
+                    } else {
+                        resultDiv.classList.add('alert-danger');
+                        resultDiv.textContent = 'L\'API Laravel n\'est pas accessible. L\'application fonctionnera en mode démo.';
+                    }
+                })
+                .catch(error => {
+                    resultDiv.classList.remove('alert-info');
+                    resultDiv.classList.add('alert-danger');
+                    resultDiv.textContent = 'Erreur lors du test de connexion: ' + error.message;
+                });
+        });
+    </script>
+</body>
+</html>

@@ -1,0 +1,249 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org" 
+      xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
+      layout:decorate="~{dashboard/layout}">
+<head>
+    <title>Offres - DayByDay CRM</title>
+</head>
+<body>
+    <div layout:fragment="content">
+        <div class="container-fluid">
+            <!-- Page Heading -->
+            <div class="d-sm-flex align-items-center justify-content-between mb-4">
+                <h1 class="h3 mb-0 text-gray-800">Offres</h1>
+                <a href="#" class="d-none d-sm-inline-block btn btn-sm btn-primary shadow-sm">
+                    <i class="fas fa-plus fa-sm text-white-50"></i> Nouvelle offre
+                </a>
+            </div>
+
+            <!-- Leads Table -->
+            <div class="card shadow mb-4">
+                <div class="card-header py-3">
+                    <h6 class="m-0 font-weight-bold text-primary">Liste des offres</h6>
+                </div>
+                <div class="card-body">
+                    <div class="table-responsive">
+                        <table class="table table-bordered" id="leadsTable" width="100%" cellspacing="0">
+                            <thead>
+                                <tr>
+                                    <th>ID</th>
+                                    <th>Titre</th>
+                                    <th>Client</th>
+                                    <th>Assigné à</th>
+                                    <th>Valeur</th>
+                                    <th>Source</th>
+                                    <th>Statut</th>
+                                    <th>Actions</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <tr th:each="lead : ${leads}">
+                                    <td th:text="${lead.id}"></td>
+                                    <td th:text="${lead.title}"></td>
+                                    <td th:text="${lead.clientName}"></td>
+                                    <td th:text="${lead.assignedUserName}"></td>
+                                    <td th:text="${#numbers.formatDecimal(lead.value, 0, 'COMMA', 2, 'POINT')} + ' €'"></td>
+                                    <td th:text="${lead.source}"></td>
+                                    <td>
+                                        <span th:class="${lead.status == 'Qualifié' ? 'badge bg-primary' : 
+                                                         (lead.status == 'Négociation' ? 'badge bg-warning' : 
+                                                         (lead.status == 'Proposition' ? 'badge bg-info' : 
+                                                         (lead.status == 'Gagné' ? 'badge bg-success' : 'badge bg-danger')))}"
+                                              th:text="${lead.status}">
+                                        </span>
+                                    </td>
+                                    <td>
+                                        <a href="#" class="btn btn-info btn-sm">
+                                            <i class="fas fa-eye"></i>
+                                        </a>
+                                        <a href="#" class="btn btn-primary btn-sm">
+                                            <i class="fas fa-edit"></i>
+                                        </a>
+                                        <a href="#" class="btn btn-danger btn-sm">
+                                            <i class="fas fa-trash"></i>
+                                        </a>
+                                    </td>
+                                </tr>
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Lead Charts -->
+            <div class="row">
+                <div class="col-xl-6 col-lg-6">
+                    <div class="card shadow mb-4">
+                        <div class="card-header py-3">
+                            <h6 class="m-0 font-weight-bold text-primary">Statut des offres</h6>
+                        </div>
+                        <div class="card-body">
+                            <div class="chart-pie pt-4">
+                                <canvas id="leadStatusChart"></canvas>
+                            </div>
+                            <div class="mt-4 text-center small">
+                                <span class="mr-2">
+                                    <i class="fas fa-circle text-primary"></i> Qualifié
+                                </span>
+                                <span class="mx-2">
+                                    <i class="fas fa-circle text-warning"></i> Négociation
+                                </span>
+                                <span class="mx-2">
+                                    <i class="fas fa-circle text-info"></i> Proposition
+                                </span>
+                                <span class="ml-2">
+                                    <i class="fas fa-circle text-success"></i> Gagné
+                                </span>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                
+                <div class="col-xl-6 col-lg-6">
+                    <div class="card shadow mb-4">
+                        <div class="card-header py-3">
+                            <h6 class="m-0 font-weight-bold text-primary">Sources des offres</h6>
+                        </div>
+                        <div class="card-body">
+                            <div class="chart-pie pt-4">
+                                <canvas id="leadSourceChart"></canvas>
+                            </div>
+                            <div class="mt-4 text-center small">
+                                <span class="mr-2">
+                                    <i class="fas fa-circle text-primary"></i> Référence
+                                </span>
+                                <span class="mx-2">
+                                    <i class="fas fa-circle text-success"></i> Site web
+                                </span>
+                                <span class="ml-2">
+                                    <i class="fas fa-circle text-info"></i> Salon
+                                </span>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Lead Value Chart -->
+            <div class="row">
+                <div class="col-xl-12 col-lg-12">
+                    <div class="card shadow mb-4">
+                        <div class="card-header py-3">
+                            <h6 class="m-0 font-weight-bold text-primary">Valeur des offres par statut</h6>
+                        </div>
+                        <div class="card-body">
+                            <div class="chart-bar">
+                                <canvas id="leadValueChart"></canvas>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <th:block layout:fragment="scripts">
+        <script>
+            // Lead Status Chart
+            var ctx = document.getElementById("leadStatusChart");
+            var leadStatusChart = new Chart(ctx, {
+                type: 'doughnut',
+                data: {
+                    labels: ["Qualifié", "Négociation", "Proposition", "Gagné"],
+                    datasets: [{
+                        data: [1, 1, 1, 0],
+                        backgroundColor: ['#4e73df', '#f6c23e', '#36b9cc', '#1cc88a'],
+                        hoverBackgroundColor: ['#2e59d9', '#dda20a', '#2c9faf', '#17a673'],
+                        hoverBorderColor: "rgba(234, 236, 244, 1)",
+                    }],
+                },
+                options: {
+                    maintainAspectRatio: false,
+                    plugins: {
+                        legend: {
+                            display: false
+                        }
+                    },
+                    cutout: '70%',
+                }
+            });
+            
+            // Lead Source Chart
+            var ctx2 = document.getElementById("leadSourceChart");
+            var leadSourceChart = new Chart(ctx2, {
+                type: 'doughnut',
+                data: {
+                    labels: ["Référence", "Site web", "Salon"],
+                    datasets: [{
+                        data: [1, 1, 1],
+                        backgroundColor: ['#4e73df', '#1cc88a', '#36b9cc'],
+                        hoverBackgroundColor: ['#2e59d9', '#17a673', '#2c9faf'],
+                        hoverBorderColor: "rgba(234, 236, 244, 1)",
+                    }],
+                },
+                options: {
+                    maintainAspectRatio: false,
+                    plugins: {
+                        legend: {
+                            display: false
+                        }
+                    },
+                    cutout: '70%',
+                }
+            });
+            
+            // Lead Value Chart
+            var ctx3 = document.getElementById("leadValueChart");
+            var leadValueChart = new Chart(ctx3, {
+                type: 'bar',
+                data: {
+                    labels: ["Qualifié", "Négociation", "Proposition", "Gagné"],
+                    datasets: [{
+                        label: "Valeur (€)",
+                        backgroundColor: "#4e73df",
+                        hoverBackgroundColor: "#2e59d9",
+                        data: [12000, 8500, 4500, 0]
+                    }],
+                },
+                options: {
+                    maintainAspectRatio: false,
+                    scales: {
+                        x: {
+                            grid: {
+                                display: false
+                            }
+                        },
+                        y: {
+                            grid: {
+                                borderDash: [2],
+                                drawBorder: false
+                            },
+                            ticks: {
+                                callback: function(value) {
+                                    return value + ' €';
+                                }
+                            }
+                        }
+                    },
+                    plugins: {
+                        tooltip: {
+                            callbacks: {
+                                label: function(context) {
+                                    var label = context.dataset.label || '';
+                                    if (label) {
+                                        label += ': ';
+                                    }
+                                    if (context.parsed.y !== null) {
+                                        label += new Intl.NumberFormat('fr-FR', { style: 'currency', currency: 'EUR' }).format(context.parsed.y);
+                                    }
+                                    return label;
+                                }
+                            }
+                        }
+                    }
+                }
+            });
+        </script>
+    </th:block>
+</body>
+</html>
